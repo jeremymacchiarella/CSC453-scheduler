@@ -8,8 +8,15 @@
 #include <sys/time.h>
 
 int main(int argc, char **argv){
-    for (int i = 0; i < 10; i+=2){
+    if (argc < 2){
+        printf("need size arg\n");
+        exit(1);
+    }
+    int num = atoi(argv[1]);
+
+    for (int i = 0; i <= num; i+=2){
         printf("%d\n", i);
         sleep(1);
     }
+    printf("finished test1\n");
 }

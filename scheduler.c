@@ -39,7 +39,7 @@ void stopTimer(struct itimerval *timer){
 }
 
 void handle_SIGALRM(int sig) {
-    printf("SIGALRM received\n");
+    //printf("SIGALRM received\n");
     timer_flag = true;
     if (!child_finished){
         kill(current_pid, SIGSTOP);
@@ -54,8 +54,8 @@ void handle_SIGCHLD(int sig){
 
     pid = waitpid(current_pid, &status, WNOHANG);
 
-    if (pid > 0){
-        printf("termination\n");
+    if (pid > 0){ //child that sent SIGCHLD sent it because they have FINISHED execution
+        //printf("termination\n");
         child_finished = true;
     }
 
@@ -201,7 +201,10 @@ int main(int argc, char **argv){
 
             
             while (timer_flag == false){
-                //wait for timer to expire
+                //wait for timer to go off or for child to finish executing
+                if (child_finished == true){
+                    break;
+                }
             }
             timer_flag = false;
             stopTimer(&process_timer);
@@ -224,13 +227,6 @@ int main(int argc, char **argv){
         
     }
 
-    
-
-
-    
-
-
-    
 
     return 0;
 }
