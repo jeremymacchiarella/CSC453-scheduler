@@ -200,11 +200,9 @@ int main(int argc, char **argv){
             
 
             
-            while (timer_flag == false){
-                //wait for timer to go off or for child to finish executing
-                if (child_finished == true){
-                    break;
-                }
+            while (timer_flag == false && child_finished == false){
+                
+                pause(); //waits for signal, if it is a timer signal or chld finishing, while loop breaks
             }
             timer_flag = false;
             stopTimer(&process_timer);
@@ -213,7 +211,8 @@ int main(int argc, char **argv){
             if (child_finished){
                  
                 child_finished = false;
-                waitpid(child_pids[i], &status, 0); //wait on child to prevent zombie process
+                //this waitpid is already done inside the signal handler for sig child
+                //waitpid(child_pids[i], &status, 0); 
                 active_processes--;
                 processIsActive[i] = false;
             }
